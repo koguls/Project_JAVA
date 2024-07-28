@@ -1,5 +1,10 @@
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -39,6 +44,10 @@ public class GamePanel extends JPanel implements ActionListener {
 
 
     public void startGame(){
+        newapple();
+        running = true;
+        timer = new Timer();
+        timer.start();
 
     }
 
@@ -46,19 +55,48 @@ public class GamePanel extends JPanel implements ActionListener {
 
 
     
-    public void paintComponent(){
+    public void paintComponent(Graphics g){
+        super.paintComponent(g);
+        draw(g);
 
     }
 
-    public void draw(){
-        
+    public void draw(Graphics g){
+
+        for (int i = 0; i < SCREEN_HEIGHT/UNIT_SIZE; i++) {
+            g.drawLine(i *UNIT_SIZE,0, i*UNIT_SIZE, SCREEN_HEIGHT);
+            g.drawLine(0, i *UNIT_SIZE, SCREEN_WIDTH, i*UNIT_SIZE);
+        }
+        g.setColor(Color.red);
+        g.fillOval(appleX, appleY, UNIT_SIZE, UNIT_SIZE);
     }
 
-    public void appleEat(){
+    public void newapple(){
+        appleX = random.nextInt((int)(SCREEN_WIDTH/UNIT_SIZE))*UNIT_SIZE;
+        appleY = random.nextInt((int)(SCREEN_HEIGHT/UNIT_SIZE))*UNIT_SIZE;
 
     }
 
     public void move(){
+        for(int i = bodyparts;i>0;i--){
+            x[i] = x[i-1];
+            y[i] = y[i-1];
+        }
+
+        switch (direction) {
+            case 'U':
+                y[0] = y[0] - UNIT_SIZE;
+                break;
+            case 'D':
+                y[0] = y[0] +UNIT_SIZE;
+                break;
+            case 'L':
+                x[0] = x[0] - UNIT_SIZE;
+                break;
+            case 'R':
+                x[0] = x[0] + UNIT_SIZE;
+                break;
+        }
 
     }
     public void checkApple(){
